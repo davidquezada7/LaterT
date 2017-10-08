@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">LaterT</string>
+    <string name="action_settings">Configuración</string>
+    <string name="image_details_header">Detalles:</string>
+    <string name="image_preview_header">Vista previa:</string>
+    <string name="loading_message">Subiendo la imagen. Por favor espere.</string>
+
+    <string name="dialog_select_prompt">Sube una imagen</string>
+    <string name="dialog_select_camera">Camara</string>
+    <string name="dialog_select_gallery">Galeria</string>
+
+    <string name="image_picker_error">Algo salió mal. Por favor elige otra imagen.</string>
+</resources>

@@ -1,0 +1,16 @@
+{"server_response": [
+		{
+			"placa" : "768CLY",
+			"propietario":"Erick Quezada"
+		},
+		{
+			"placa" : "512BLG",
+			"propietario":"Leonel Quezada"
+		},
+		{
+			"placa" : "785CLV",
+			"propietario":"Daniel Quezada"
+		
+		}
+	]
+}

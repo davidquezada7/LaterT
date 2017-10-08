@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista Negra</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+
+<style>
+form {
+    border: 3px solid #f1f1f1;
+	margin: auto;
+	width: 60%;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#boton {
+    background-color: #4db8ff;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 90%;
+}
+
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: auto;
+	width:90%;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 5%;
+}
+
+.container {
+    padding: 16px;
+	width:90%;
+	margin:auto;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+}
+
+#maincontainer{
+	margin: auto;
+}
+</style>
+	 
+	 
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+ <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+
+
+<script>
+$(document).ready(function(){
+	$('#boxfb').change(function() {
+		$('#comentariostxt').attr('disabled', !this.checked);
+	});
+		
+	/*$("form#data").submit(function(){
+
+		
+		return false;
+	});*/
+
+
+
+    $(".ui-widget").hide();
+	
+	$.get( "listanegra/getListaNegra.php", function( data ) {
+		 $("#listanegradata").html(data);
+		 $(".listanegralist").click(function() {
+			$.get( "listanegra/borrarListaNegra.php?id="+this.id , function( data ) {
+				$("#listanegradata").html(data);
+			});
+		});
+		
+		$(".itemImage").click(function(){
+			$.get( "listanegra/getImage.php?id="+this.id, function( data ) {
+				$("#imageresponse").html(data);
+			});
+			
+		});
+	}); 
+	
+	 $.validator.addMethod("regex", function(value, element, regexpr) {          
+     return regexpr.test(value);
+   }, "Please enter a valid pasword.");  
+   
+   $("#data").validate({
+    // Specify validation rules
+    rules: {
+      // The key name on the left side is the name attribute
+      // of an input field. Validation rules are defined
+      // on the right side
+      placatxt: {required: true,
+               regex: /^[P][0-9][0-9][0-9][A-Z][A-Z][A-Z]$/},
+	  
+      propietariotxt: "required",
+	  marcatxt: "required",
+      colortxt: "required",
+	  modelotxt:"required",
+	  motivotxt:"required"
+   
+    },
+    // Specify validation error messages
+    messages: {
+      placatxt: "La placa no es valida",
+      propietariotxt: "El campo propiertario es requerido",
+	   marcatxt: "El campo marca es requerido",
+      colortxt: "El campo color es requerido",
+	  modelotxt: "El campo modelo es requerido",
+	   motivotxt: "El campo motivo es requerido"
+     
+    },
+    // Make sure the form is submitted to the destination defined
+    // in the "action" attribute of the form when valid
+    submitHandler:  function (form){
+	alert("Hola");
+	var formData = new FormData($(form)[0]);
+
+		$.ajax({
+			url: 'listanegra/insertarListaNegra.php',
+			type: 'POST',
+			data: formData,
+			async: false,
+			success: function (data) {
+				$("#listanegradata").html(data);
+				alert("Ingresado exitosamente");
+				$(".ui-widget").hide();
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+
+	}
+  });
+  
+
+	$("#insertarbtn").click(function() {
+
+		$("#dialog").dialog({
+		  width: 900
+		});
+		
+		$(".ui-dialog").show();
+	});
+	 
+});
+
+  
+
+</script>
+   
+   
+</head>
+<body>
+	<div id="dialog" class="ui-dialog" title="Ingresa una placa nueva en la lista negra" hidden="hidden">
+		
+		<form id="data" method="post" enctype="multipart/form-data">
+			<label>Placa </label>
+			<input type="text" id="placatxt" name="placatxt"  placeholder="Placa"/><br />
+			<label>Propietario </label>
+			<input type="text" id="propietariotxt" name="propietariotxt"  placeholder="Propietario"/><br />
+			<label>Marca</label>
+			<input type="text" id="marcatxt" name="marcatxt"  placeholder="Marca"/> <br/>
+			<label>Color</label>
+			<input type="text" id="colortxt" name="colortxt"  placeholder="Color"/> <br/>
+			<label>Model</label>
+			<input type="text" id="modelotxt" name="modelotxt"  placeholder="Modelo"/> <br/>
+			<label>Motivo</label>
+			<input type="text" id="motivotxt" name="motivotxt"  placeholder="Motivo"/> <br/>
+			<label>Subir foto</label>
+			<input name="image" type="file"/>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" id="boxfb" name="boxfb" value="fb" /> Publicar en Facebook
+				</label>
+			</div>
+			<input type="text" id="comentariostxt" name="comentariostxt" class="form-control" placeholder="Ingresa los comentarios" disabled />
+			<button>Submit</button>
+		</form>
+	  
+	</div>
+
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"></a> 
+            </div>
+  <div style="color: white;
+padding: 15px 50px 5px 50px;
+float: right;
+font-size: 16px;"> <a href="../login.php" class="btn btn-danger square-btn-adjust">Logout</a> </div>
+        </nav>   
+           <!-- /. NAV TOP  -->
+			<nav class="navbar-default navbar-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav" id="main-menu">
+						<li class="text-center">
+							<img src="assets/img/find_user.png" class="user-image img-responsive"/>
+						</li>
+						
+						<!-- DASHBOARD-->	
+						<li>
+							<a href="index.html"><i class="fa fa-table fa-3x"></i> Dashboard </a>
+						</li>
+						<!-- LISTA NEGRA-->
+						<li>
+							<a class="active-menu" href="listanegra.html"><i class="fa fa-bars fa-3x"></i> Lista Negra</a>
+						</li>
+						<!-- ALESPIS-->	
+						<li>
+							<a  href="alespis.html"><i class="fa fa-desktop fa-3x"></i> Alespis</a>
+						</li>
+						<!-- BUSQUEDA DE PLACAS-->	
+						<li>
+							<a href="#"><i class="fa fa-sitemap fa-3x"></i> Busqueda de Placas<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a href="buscarMapa.php">Buscar en mapa</a>
+								</li>
+								<li>
+									<a href="buscarTablas.php">Buscar en tablas</a>
+								</li>
+							</ul>
+						</li> 
+					</ul>
+				</div>
+			</nav>  
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                     <h1>Lista Negra</h1>   
+                        <h5>Activa o desactiva las placas en busqueda.</h5>
+                       
+                    </div>
+                </div>
+                <!-- /. ROW  -->
+                <hr />
+                <div class="row"> 
+					<div class="col-md-7">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+							 Las placas incluidas en esta lista que esten con estado activo, generaran una alerta autom&aacute;tica.
+							</div>        
+										  
+							<div class="panel-body">
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover">
+										<thead >
+										   <tr>
+												
+												<th>Placa</th>
+												<th>Propietario</th>
+												<th>Marca</th>
+												<th>Color</th>
+												<th>Modelo</th>
+												<th>Motivo</>
+												<th>Fecha</th>
+												<th>Estado</th>
+												<th>Borrar</th>
+											</tr>
+										 </thead>
+										<tbody id="listanegradata">
+										</tbody>
+									</table>
+								</div>
+								
+								<div style="color: white; float: left; font-size: 16px;"> 
+									<a id="insertarbtn" class="btn btn-danger square-btn-adjust">Ingresar placa</a> 
+								</div>
+							</div>
+						</div>
+						<div class="jumbotron" id="imageresponse">
+						</div>
+					</div>
+				</div>
+                     <div class="col-md-5">
+
+                    </div>
+                    </div>
+                <!-- /. ROW  -->
+     
+                
+                 <!-- /. ROW  -->
+                
+                <!-- /. ROW  -->
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+ 
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
+ 
+</body>
+</html>
